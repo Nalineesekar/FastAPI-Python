@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile Registry</title>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+    <header class="app-header">
+        <h1>Student Profile Registry</h1>
+        <p class="subtitle">Secure Profile CRUD Hub with Live Validation</p>
+    </header>
+
+    <div class="main-grid">
+        <!-- Form Section -->
+        <section class="card form-card">
+            <h2 id="formTitle">Create New Student</h2>
+            
+            <form id="studentForm" onsubmit="event.preventDefault(); saveStudent();" novalidate>
+                <input type="hidden" id="studentId">
+                <input type="hidden" id="existingImage">
+                
+                <!-- Profile Image Upload -->
+                <div class="profile-image-section">
+                    <div class="avatar-preview-container" id="avatarPreviewContainer">
+                        <img id="avatarPreview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>" alt="Preview">
+                        <div class="avatar-overlay">
+                            <span>Upload Image</span>
+                        </div>
+                    </div>
+                    <input type="file" id="profileImage" accept="image/png, image/jpeg, image/webp" style="display: none;">
+                    <div class="image-actions">
+                        <button type="button" class="btn-secondary btn-small" id="uploadBtn">Choose Image</button>
+                        <button type="button" class="btn-danger-outline btn-small" id="removeImgBtn" style="display: none;">Remove</button>
+                    </div>
+                    <div class="error-msg" id="image-error"></div>
+                </div>
+
+                <!-- Basic Text Fields -->
+                <div class="form-group">
+                    <label for="name">Full Name <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="text" id="name" placeholder="John Doe" autocomplete="off">
+                        <span class="status-indicator"></span>
+                    </div>
+                    <div class="error-msg" id="name-error"></div>
+                    <span class="field-hint">Letters, spaces, and hyphens only (2-50 chars).</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" placeholder="john.doe@example.com" autocomplete="off">
+                        <span class="status-indicator"></span>
+                    </div>
+                    <div class="error-msg" id="email-error"></div>
+                </div>
+
+                <!-- Date & Age -->
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="date_of_birth">Date of Birth <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="date" id="date_of_birth">
+                            <span class="status-indicator"></span>
+                        </div>
+                        <div class="error-msg" id="date_of_birth-error"></div>
+                    </div>
+
+                    <div class="form-group width-30">
+                        <label for="age">Calculated Age</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="age" readonly placeholder="18+">
+                            <span class="status-indicator"></span>
+                        </div>
+                        <div class="error-msg" id="age-error"></div>
+                    </div>
+                </div>
+
+                <!-- Gender (Enum) -->
+                <div class="form-group">
+                    <label for="gender">Gender <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <select id="gender">
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span class="status-indicator"></span>
+                    </div>
+                    <div class="error-msg" id="gender-error"></div>
+                </div>
+
+                <!-- Skills (Set) -->
+                <div class="form-group">
+                    <label>Skills / Technologies <span class="required">*</span></label>
+                    <div class="skills-grid">
+                        <label class="skill-chip">
+                            <input type="checkbox" name="skills" value="HTML">
+                            <span>HTML</span>
+                        </label>
+                        <label class="skill-chip">
+                            <input type="checkbox" name="skills" value="CSS">
+                            <span>CSS</span>
+                        </label>
+                        <label class="skill-chip">
+                            <input type="checkbox" name="skills" value="JavaScript">
+                            <span>JavaScript</span>
+                        </label>
+                        <label class="skill-chip">
+                            <input type="checkbox" name="skills" value="Python">
+                            <span>Python</span>
+                        </label>
+                        <label class="skill-chip">
+                            <input type="checkbox" name="skills" value="SQL">
+                            <span>SQL</span>
+                        </label>
+                        <label class="skill-chip">
+                            <input type="checkbox" name="skills" value="Go">
+                            <span>Go</span>
+                        </label>
+                        <label class="skill-chip">
+                            <input type="checkbox" name="skills" value="Rust">
+                            <span>Rust</span>
+                        </label>
+                    </div>
+                    <div class="error-msg" id="skills-error"></div>
+                    <span class="field-hint">Select at least one technology skill.</span>
+                </div>
+
+                <!-- Form Controls -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary" id="submitBtn">Save Student</button>
+                    <button type="button" class="btn-secondary" id="cancelBtn" style="display: none;" onclick="resetForm()">Cancel Edit</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- List Section -->
+        <section class="card list-card">
+            <div class="list-header">
+                <h2>Registered Students</h2>
+                <div class="search-wrapper">
+                    <input type="text" id="searchInput" placeholder="Search profiles..." oninput="filterStudents()">
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>Avatar</th>
+                            <th>Student Information</th>
+                            <th>Age & DOB</th>
+                            <th>Gender</th>
+                            <th>Skills</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTable">
+                        <!-- Dynamic Student Rows -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" id="emptyState">
+                <p>No student profiles found. Add a new profile on the left.</p>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- Toast Alert Box -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
